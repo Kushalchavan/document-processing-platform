@@ -10,7 +10,7 @@
     "start": "node dist/server.js",
     "lint": "pnpm exec eslint .",
     "format": "pnpm exec prettier --write .",
-    "migrate": "pnpm exec tsx sql/migrate.ts"
+    "migrate": "pnpm exec tsx src/infrastructure/database/migrate.ts"
   },
   "dependencies": {
     "compression": "^1.8.1",

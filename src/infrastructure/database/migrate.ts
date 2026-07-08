@@ -39,21 +39,21 @@ export async function runMigrations() {
   await ensureMigrationsTableExists();
 
   const files = (await fs.readdir(migrationsPath))
-  .filter((file) => file !== '000_migrations.sql')
-  .sort();
+    .filter((file) => file !== '000_migrations.sql')
+    .sort();
 
   for (const file of files) {
     console.log(file);
     const result = await dbPool.query(`SELECT * FROM migrations WHERE filename = $1`, [file]);
 
-    if((result.rowCount ?? 0 ) > 0) {
+    if ((result.rowCount ?? 0) > 0) {
       continue;
     }
 
     // Read the sql file
     const sql = await fs.readFile(path.join(migrationsPath, file), 'utf-8');
-    
-    // Execute the sql file 
+
+    // Execute the sql file
     await dbPool.query(sql);
 
     // Insert filename into migrations table
@@ -67,7 +67,7 @@ runMigrations()
     process.exit(0);
   })
   .catch((error) => {
-    console.error('❌ Migration failed')
+    console.error('❌ Migration failed');
     console.error(error);
     process.exit(1);
   });

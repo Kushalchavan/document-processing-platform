@@ -1,1 +1,5 @@
-// Auth types placeholder
+export interface CreateUserInput {
+  username: string;
+  email: string;
+  passwordHash: string;
+}

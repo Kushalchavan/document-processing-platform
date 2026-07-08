@@ -1,12 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { AppError } from './AppError';
 
-export function errorHandler(
-  error: unknown,
-  _req: Request,
-  res: Response,
-  _next: NextFunction,
-) {
+export function errorHandler(error: unknown, _req: Request, res: Response, _next: NextFunction) {
   if (error instanceof AppError) {
     return res.status(error.statusCode).json({
       error: {

@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import compression from 'compression';
+import cookieParser from 'cookie-parser';
 import { json, urlencoded } from 'express';
 import { requestIdMiddleware } from '@shared/middleware/requestId.middleware.js';
 import { errorHandler } from '@shared/errors/errorHandler.js';
@@ -17,6 +18,7 @@ app.use(helmet());
 app.use(cors());
 app.use(compression());
 app.use(json());
+app.use(cookieParser());
 app.use(urlencoded({ extended: true }));
 
 app.use('/health', healthRouter);

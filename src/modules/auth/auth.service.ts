@@ -1,9 +1,16 @@
 import { ConflictError } from '@shared/errors/ConflictError';
-import { createRefreshToken, createUser, findByEmail } from './auth.repository';
-import { LoginInput, RegisterInput } from './auth.schema';
+import {
+  createRefreshToken,
+  createUser,
+  findByEmail,
+  revokeRefreshToken,
+  findRefreshTokenByUserId,
+  updateRefreshToken,
+} from './auth.repository';
+import { LoginInput, RegisterInput, RefreshInput } from './auth.schema';
 import bcrypt from 'bcrypt';
 import { UnauthorizedError } from '@shared/errors/UnauthorizedError';
-import { generateAccessToken, generateRefreshToken } from '@shared/utils/jwt';
+import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from '@shared/utils/jwt';
 
 export async function register({ username, email, password }: RegisterInput) {
   const existingUser = await findByEmail(email);
@@ -58,5 +65,54 @@ export async function login({ email, password }: LoginInput) {
     },
     accessToken,
     refreshToken,
+  };
+}
+
+export async function logout(userId: number) {
+  await revokeRefreshToken(userId);
+}
+
+export async function refresh({ refreshToken }: RefreshInput) {
+  // Verify JWT
+  const payload = verifyRefreshToken(refreshToken);
+
+  //  Find stored refresh token
+  const storedToken = await findRefreshTokenByUserId(payload.userId);
+
+  if (!storedToken) {
+    throw new UnauthorizedError('Refresh token not found');
+  }
+
+  //  Compare hash
+  const isValid = await bcrypt.compare(refreshToken, storedToken.token_hash);
+
+  if (!isValid) {
+    throw new UnauthorizedError('Invalid refresh token');
+  }
+
+  //  Generate new tokens
+  const newAccessToken = generateAccessToken({
+    userId: payload.userId,
+    email: payload.email,
+  });
+
+  const newRefreshToken = generateRefreshToken({
+    userId: payload.userId,
+    email: payload.email,
+  });
+
+  // Hash new refresh token
+  const refreshTokenHash = await bcrypt.hash(newRefreshToken, 10);
+
+  // Rotate refresh token
+  await updateRefreshToken(
+    payload.userId,
+    refreshTokenHash,
+    new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+  );
+
+  return {
+    accessToken: newAccessToken,
+    refreshToken: newRefreshToken,
   };
 }

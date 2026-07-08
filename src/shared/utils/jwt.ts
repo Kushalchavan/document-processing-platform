@@ -1,10 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { env } from '@config/env';
-
-type JwtPayload = {
-  userId: number;
-  email: string;
-};
+import { JwtPayload } from '@modules/auth/auth.types';
 
 export function generateAccessToken(payload: JwtPayload) {
   return jwt.sign(payload, env.jwtAccessSecret, {

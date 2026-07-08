@@ -43,3 +43,44 @@ export async function createRefreshToken(userId: number, tokenHash: string, expi
     [userId, tokenHash, expiresAt],
   );
 }
+
+export async function findRefreshTokenByUserId(userId: number) {
+  const result = await dbPool.query(
+    `
+      SELECT *
+      FROM refresh_tokens
+      WHERE user_id = $1
+      AND revoked_at IS NULL
+      ORDER BY created_at DESC
+      LIMIT 1
+    `,
+    [userId],
+  );
+
+  return result.rows[0] || null;
+}
+
+export async function updateRefreshToken(userId: number, tokenHash: string, expiresAt: Date) {
+  await dbPool.query(
+    `
+      UPDATE refresh_tokens
+      SET
+        token_hash = $1,
+        expires_at = $2,
+        revoked_at = NULL
+      WHERE user_id = $3
+    `,
+    [tokenHash, expiresAt, userId],
+  );
+}
+
+export async function revokeRefreshToken(userId: number) {
+  await dbPool.query(
+    `
+      UPDATE refresh_tokens
+      SET revoked_at = CURRENT_TIMESTAMP
+      WHERE user_id = $1
+    `,
+    [userId],
+  );
+}

@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
-import { uploadDocument } from './document.service';
+import { uploadDocument, getDocuments } from './document.service';
+import { getDocumentsSchema } from './document.schema';
 
 export async function uploadDocumentController(req: Request,res: Response,) {
   if (!req.file) {
@@ -12,4 +13,23 @@ export async function uploadDocumentController(req: Request,res: Response,) {
   });
 
   return res.status(201).json(document);
+}
+
+export async function getDocumentsController(
+  req: Request,
+  res: Response,
+) {
+  // const page = Number(req.query.page) || 1; // default page
+  // const limit = Number(req.query.limit) || 10; // default limit 
+
+  // validate and parse query params using zod
+  const { page, limit } = getDocumentsSchema.parse(req.query);
+
+  const result = await getDocuments(
+    req.user.userId,
+    page,
+    limit,
+  );
+
+  return res.status(200).json(result);
 }

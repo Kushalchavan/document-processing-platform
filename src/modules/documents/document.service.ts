@@ -1,4 +1,4 @@
-import {createDocument} from './document.repository';
+import {createDocument, getDocument} from './document.repository';
 
 interface UploadDocumentInput {
   userId: number;
@@ -16,4 +16,26 @@ export async function uploadDocument({
     fileSize: file.size,
     mimeType: file.mimetype,
   });
+}
+
+export async function getDocuments(
+  userId: number,
+  page: number,
+  limit: number,
+) {
+  const result = await getDocument({
+    userId,
+    page,
+    limit,
+  });
+
+  return {
+    documents: result.documents,
+    pagination: {
+      page,
+      limit,
+      total: result.total,
+      totalPages: Math.ceil(result.total / limit),
+    },
+  };
 }

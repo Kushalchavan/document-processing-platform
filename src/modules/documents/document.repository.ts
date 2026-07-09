@@ -1,13 +1,7 @@
 import { dbPool } from '@infrastructure/database/pool';
+import {CreateDocumentInput, GetDocumentsInput} from './document.types';
 
-interface CreateDocumentInput {
-  userId: number;
-  fileName: string;
-  filePath: string;
-  fileSize: number;
-  mimeType: string;
-}
-
+// create a new document for a specific user
 export async function createDocument({
   userId,
   fileName,
@@ -38,4 +32,46 @@ export async function createDocument({
   );
 
   return result.rows[0];
+}
+
+// Get document for a specific user with pagination
+export async function getDocument({
+  userId,
+  page,
+  limit,
+}: GetDocumentsInput) {
+  // calculate the offset for pagination
+  const offset = (page - 1) * limit;
+
+  const documents = await dbPool.query(
+    `
+      SELECT
+        id,
+        file_name,
+        file_size,
+        mime_type,
+        status,
+        created_at
+      FROM documents
+      WHERE user_id = $1
+      ORDER BY created_at DESC
+      LIMIT $2
+      OFFSET $3
+    `,
+    [userId, limit, offset],
+  );
+
+  const total = await dbPool.query(
+    `
+      SELECT COUNT(*)::int AS total
+      FROM documents
+      WHERE user_id = $1
+    `,
+    [userId],
+  );
+
+  return {
+    documents: documents.rows,
+    total: total.rows[0].total,
+  };
 }

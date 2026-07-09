@@ -1,11 +1,14 @@
-import {createDocument, getDocument, findDocumentById} from './document.repository';
-import {UploadDocumentInput} from './document.types';
+import fs from 'node:fs/promises';
+import {
+  createDocument,
+  getDocument,
+  findDocumentById,
+  deleteDocument,
+} from './document.repository';
+import { UploadDocumentInput } from './document.types';
 import { NotFoundError } from '@shared/errors/NotFoundError';
 
-export async function uploadDocument({
-  userId,
-  file,
-}: UploadDocumentInput) {
+export async function uploadDocument({ userId, file }: UploadDocumentInput) {
   return createDocument({
     userId,
     fileName: file.originalname,
@@ -15,11 +18,7 @@ export async function uploadDocument({
   });
 }
 
-export async function getDocuments(
-  userId: number,
-  page: number,
-  limit: number,
-) {
+export async function getDocuments(userId: number, page: number, limit: number) {
   const result = await getDocument({
     userId,
     page,
@@ -37,18 +36,32 @@ export async function getDocuments(
   };
 }
 
-export async function getDocumentById(
-  documentId: number,
-  userId: number,
-) {
-  const document = await findDocumentById(
-    documentId,
-    userId,
-  );
+export async function getDocumentById(documentId: number, userId: number) {
+  const document = await findDocumentById(documentId, userId);
 
   if (!document) {
     throw new NotFoundError('Document not found');
   }
 
   return document;
+}
+
+export async function deleteDocuments(documentId: number, userId: number) {
+  const document = await findDocumentById(documentId, userId);
+
+  if (!document) {
+    throw new NotFoundError('Document not found');
+  }
+
+  // Delet file if it exists
+  try {
+    await fs.unlink(document.file_path);
+  } catch (error: any) {
+    // Ignore if file is already missing
+    if (error.code !== 'ENOENT') {
+      throw error;
+    }
+  }
+
+  await deleteDocument(documentId);
 }

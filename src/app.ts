@@ -9,7 +9,7 @@ import { errorHandler } from '@shared/errors/errorHandler';
 import { healthRouter } from '@shared/routes/health.routes';
 import { httpLogger } from '@infrastructure/logger/httpLogger';
 
-// Module route imports 
+// Module route imports
 import authRouter from '@modules/auth/auth.routes';
 import documentRouter from '@modules/documents/document.routes';
 

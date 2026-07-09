@@ -15,17 +15,13 @@ const storage = multer.diskStorage({
     const userId = req.user.userId;
 
     // Create a directory for the user if it doesn't exist
-    const uploadDir = path.join(
-      process.cwd(),
-      'uploads',
-      `user-${userId}`,
-    );
+    const uploadDir = path.join(process.cwd(), 'uploads', `user-${userId}`);
 
     // Ensure the directory exists
     fs.mkdirSync(uploadDir, { recursive: true });
     cb(null, uploadDir);
   },
-  
+
   // Generate a unique filename for the uploaded file
   filename(_req, file, cb) {
     const uniqueName = `${Date.now()}-${file.originalname}`;
@@ -42,11 +38,7 @@ export const upload = multer({
 
   fileFilter(_req, file, cb) {
     if (!allowedMimeTypes.includes(file.mimetype)) {
-      return cb(
-        new ValidationError(
-          'Only PDF, DOC, DOCX and TXT files are allowed',
-        ),
-      );
+      return cb(new ValidationError('Only PDF, DOC, DOCX and TXT files are allowed'));
     }
 
     cb(null, true);

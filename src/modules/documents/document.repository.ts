@@ -1,5 +1,5 @@
 import { dbPool } from '@infrastructure/database/pool';
-import {CreateDocumentInput, GetDocumentsInput} from './document.types';
+import { CreateDocumentInput, GetDocumentsInput } from './document.types';
 
 // create a new document for a specific user
 export async function createDocument({
@@ -35,11 +35,7 @@ export async function createDocument({
 }
 
 // Get document for a specific user with pagination
-export async function getDocument({
-  userId,
-  page,
-  limit,
-}: GetDocumentsInput) {
+export async function getDocument({ userId, page, limit }: GetDocumentsInput) {
   // calculate the offset for pagination
   const offset = (page - 1) * limit;
 
@@ -77,20 +73,10 @@ export async function getDocument({
 }
 
 // find a document by it's id for a specific user
-export async function findDocumentById(
-  documentId: number,
-  userId: number,
-) {
+export async function findDocumentById(documentId: number, userId: number) {
   const result = await dbPool.query(
     `
-      SELECT
-        id,
-        file_name,
-        file_path,
-        file_size,
-        mime_type,
-        status,
-        created_at
+      SELECT *
       FROM documents
       WHERE id = $1
       AND user_id = $2
@@ -99,4 +85,15 @@ export async function findDocumentById(
   );
 
   return result.rows[0] || null;
+}
+
+// Delete docuemnt
+export async function deleteDocument(documentId: number) {
+  await dbPool.query(
+    `
+      DELETE FROM documents
+      WHERE id = $1
+    `,
+    [documentId],
+  );
 }

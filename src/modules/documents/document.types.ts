@@ -6,7 +6,6 @@ export interface CreateDocumentInput {
   mimeType: string;
 }
 
-
 export interface UploadDocumentInput {
   userId: number;
   file: Express.Multer.File;

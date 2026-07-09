@@ -8,7 +8,7 @@ export const getDocumentsSchema = z.object({
 
 export type GetDocumentsInput = z.infer<typeof getDocumentsSchema>;
 
-// schema for document params 
+// schema for document params
 export const documentParamsSchema = z.object({
   id: z.coerce.number().int().positive(),
 });

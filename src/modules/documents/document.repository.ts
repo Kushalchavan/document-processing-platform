@@ -75,3 +75,28 @@ export async function getDocument({
     total: total.rows[0].total,
   };
 }
+
+// find a document by it's id for a specific user
+export async function findDocumentById(
+  documentId: number,
+  userId: number,
+) {
+  const result = await dbPool.query(
+    `
+      SELECT
+        id,
+        file_name,
+        file_path,
+        file_size,
+        mime_type,
+        status,
+        created_at
+      FROM documents
+      WHERE id = $1
+      AND user_id = $2
+    `,
+    [documentId, userId],
+  );
+
+  return result.rows[0] || null;
+}

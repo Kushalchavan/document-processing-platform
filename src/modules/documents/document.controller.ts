@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { uploadDocument, getDocuments } from './document.service';
-import { getDocumentsSchema } from './document.schema';
+import { uploadDocument, getDocuments, getDocumentById } from './document.service';
+import { getDocumentsSchema, documentParamsSchema } from './document.schema';
 
 export async function uploadDocumentController(req: Request,res: Response,) {
   if (!req.file) {
@@ -32,4 +32,18 @@ export async function getDocumentsController(
   );
 
   return res.status(200).json(result);
+}
+
+export async function getDocumentByIdController(
+  req: Request,
+  res: Response,
+) {
+  const { id } = documentParamsSchema.parse(req.params);
+  
+  const document = await getDocumentById(
+    id,
+    req.user.userId,
+  );
+
+  return res.status(200).json(document);
 }

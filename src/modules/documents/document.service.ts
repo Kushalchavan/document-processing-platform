@@ -1,9 +1,6 @@
-import {createDocument, getDocument} from './document.repository';
-
-interface UploadDocumentInput {
-  userId: number;
-  file: Express.Multer.File;
-}
+import {createDocument, getDocument, findDocumentById} from './document.repository';
+import {UploadDocumentInput} from './document.types';
+import { NotFoundError } from '@shared/errors/NotFoundError';
 
 export async function uploadDocument({
   userId,
@@ -38,4 +35,20 @@ export async function getDocuments(
       totalPages: Math.ceil(result.total / limit),
     },
   };
+}
+
+export async function getDocumentById(
+  documentId: number,
+  userId: number,
+) {
+  const document = await findDocumentById(
+    documentId,
+    userId,
+  );
+
+  if (!document) {
+    throw new NotFoundError('Document not found');
+  }
+
+  return document;
 }

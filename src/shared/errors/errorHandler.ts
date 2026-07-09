@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { AppError } from './AppError';
+import { MulterError } from 'multer';
 
 export function errorHandler(error: unknown, _req: Request, res: Response, _next: NextFunction) {
   if (error instanceof AppError) {
@@ -10,6 +11,22 @@ export function errorHandler(error: unknown, _req: Request, res: Response, _next
       },
     });
   }
+
+  // handle multer error
+  if (error instanceof MulterError) {
+  let message = error.message;
+
+  if (error.code === 'LIMIT_FILE_SIZE') {
+    message = 'File size must not exceed 10 MB';
+  }
+
+  return res.status(400).json({
+    error: {
+      message,
+      status: 400,
+    },
+  });
+}
 
   console.error(error);
 

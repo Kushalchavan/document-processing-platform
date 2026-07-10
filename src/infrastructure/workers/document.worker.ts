@@ -6,6 +6,8 @@ import {
   updateExtractedText,
 } from '@modules/documents/document.repository';
 import { extractTextFromPdf } from '@shared/utils/pdf';
+import { createChunk } from '@modules/documents/chunk.repository';
+import { chunkText } from '@shared/utils/chunk';
 
 export const documentWorker = new Worker(
   'document-processing',
@@ -23,6 +25,11 @@ export const documentWorker = new Worker(
     const text = await extractTextFromPdf(document.file_path);
 
     await updateExtractedText(documentId, text);
+    const chunks = chunkText(text);
+    
+    for (const [index, chunk] of chunks.entries()) {
+      await createChunk(documentId, index, chunk);
+    }
     await updateDocumentStatus(documentId, 'completed');
 
     console.log(`Completed document ${documentId}`);

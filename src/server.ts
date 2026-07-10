@@ -1,15 +1,17 @@
 import app from './app';
 import { env } from '@config/env';
+import { logger } from '@infrastructure/logger/logger';
+import '@infrastructure/workers/document.worker';
 
 const server = app.listen(env.port, () => {
-  console.log(`Server is running on port ${env.port}`);
+  logger.info(`Server is running on port ${env.port}`);
 });
 
 const shutdown = async (signal: string) => {
-  console.log(`Received ${signal}, shutting down gracefully`);
-
+  logger.info(`Received ${signal}, shutting down gracefully`);
+  
   server.close(() => {
-    console.log('Server closed');
+    logger.info('Server closed');
     process.exit(0);
   });
 };

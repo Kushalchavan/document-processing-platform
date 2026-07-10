@@ -2,7 +2,14 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const requiredEnv = ['NODE_ENV', 'PORT', 'DATABASE_URL', 'JWT_ACCESS_SECRET', 'JWT_REFRESH_SECRET'];
+const requiredEnv = [
+  'NODE_ENV',
+  'PORT',
+  'DATABASE_URL',
+  'JWT_ACCESS_SECRET',
+  'JWT_REFRESH_SECRET',
+  'REDIS_URL',
+];
 
 requiredEnv.forEach((name) => {
   if (!process.env[name]) {
@@ -16,4 +23,5 @@ export const env = {
   databaseUrl: process.env.DATABASE_URL!,
   jwtAccessSecret: process.env.JWT_ACCESS_SECRET!,
   jwtRefreshSecret: process.env.JWT_REFRESH_SECRET!,
+  redisUrl: process.env.REDIS_URL!,
 };

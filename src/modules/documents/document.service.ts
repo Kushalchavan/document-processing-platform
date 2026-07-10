@@ -7,15 +7,22 @@ import {
 } from './document.repository';
 import { UploadDocumentInput } from './document.types';
 import { NotFoundError } from '@shared/errors/NotFoundError';
+import { documentQueue } from '@infrastructure/queue/document.queue';
 
 export async function uploadDocument({ userId, file }: UploadDocumentInput) {
-  return createDocument({
+  const document = await createDocument({
     userId,
     fileName: file.originalname,
     filePath: file.path,
     fileSize: file.size,
     mimeType: file.mimetype,
   });
+
+  await documentQueue.add('process-document', {
+    documentId: document.id,
+  });
+
+  return document;
 }
 
 export async function getDocuments(userId: number, page: number, limit: number) {

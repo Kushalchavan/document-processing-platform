@@ -1,20 +1,29 @@
-import { Worker } from "bullmq";
-import { redis } from "@infrastructure/queue/redis";
-import { updateDocumentStatus } from "@modules/documents/document.repository";
+import { Worker } from 'bullmq';
+import { redis } from '@infrastructure/queue/redis';
+import {
+  findDocumentByIdForWorker,
+  updateDocumentStatus,
+  updateExtractedText,
+} from '@modules/documents/document.repository';
+import { extractTextFromPdf } from '@shared/utils/pdf';
 
 export const documentWorker = new Worker(
-  "document-processing",
+  'document-processing',
   async (job) => {
     const { documentId } = job.data;
 
-    await updateDocumentStatus(documentId, "processing");
+    await updateDocumentStatus(documentId, 'processing');
 
-    console.log(`Processing document ${documentId}`);
+    const document = await findDocumentByIdForWorker(documentId);
 
-    // Fake AI processing
-    await new Promise((resolve) => setTimeout(resolve, 5000));
+    if (!document) {
+      throw new Error('Document not found');
+    }
 
-    await updateDocumentStatus(documentId, "completed");
+    const text = await extractTextFromPdf(document.file_path);
+
+    await updateExtractedText(documentId, text);
+    await updateDocumentStatus(documentId, 'completed');
 
     console.log(`Completed document ${documentId}`);
   },

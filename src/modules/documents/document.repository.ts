@@ -87,6 +87,20 @@ export async function findDocumentById(documentId: number, userId: number) {
   return result.rows[0] || null;
 }
 
+// finding docuement by id for worker /
+export async function findDocumentByIdForWorker(documentId: number) {
+  const result = await dbPool.query(
+    `
+      SELECT *
+      FROM documents
+      WHERE id = $1
+    `,
+    [documentId],
+  );
+
+  return result.rows[0] || null;
+}
+
 // Delete docuemnt
 export async function deleteDocument(documentId: number) {
   await dbPool.query(
@@ -99,10 +113,7 @@ export async function deleteDocument(documentId: number) {
 }
 
 // updating document status
-export async function updateDocumentStatus(
-  documentId: number,
-  status: string,
-) {
+export async function updateDocumentStatus(documentId: number, status: string) {
   await dbPool.query(
     `
       UPDATE documents
@@ -110,5 +121,17 @@ export async function updateDocumentStatus(
       WHERE id = $2
     `,
     [status, documentId],
+  );
+}
+
+// update extracted text
+export async function updateExtractedText(documentId: number, extractedText: string) {
+  await dbPool.query(
+    `
+      UPDATE documents
+      SET extracted_text = $1
+      WHERE id = $2
+    `,
+    [extractedText, documentId],
   );
 }

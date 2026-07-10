@@ -97,3 +97,18 @@ export async function deleteDocument(documentId: number) {
     [documentId],
   );
 }
+
+// updating document status
+export async function updateDocumentStatus(
+  documentId: number,
+  status: string,
+) {
+  await dbPool.query(
+    `
+      UPDATE documents
+      SET status = $1
+      WHERE id = $2
+    `,
+    [status, documentId],
+  );
+}

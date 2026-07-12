@@ -12,6 +12,7 @@ import { httpLogger } from '@infrastructure/logger/httpLogger';
 // Module route imports
 import authRouter from '@modules/auth/auth.routes';
 import documentRouter from '@modules/documents/document.routes';
+import chatRoutes from '@modules/chat/chat.routes';
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.use('/health', healthRouter);
 //module routes registration goes here
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/documents', documentRouter);
+app.use('/api/v1/chat', chatRoutes);
 
 // Error handling middleware
 app.use(errorHandler);

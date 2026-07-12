@@ -14,3 +14,15 @@ export async function createChunk(documentId: number, chunkIndex: number, conten
     [documentId, chunkIndex, content],
   );
 }
+
+export async function updateEmbedding(documentId: number, chunkIndex: number, embedding: number[]) {
+  await dbPool.query(
+    `
+      UPDATE document_chunks
+      SET embedding = $1::vector
+      WHERE document_id = $2
+      AND chunk_index = $3
+    `,
+    [`[${embedding.join(',')}]`, documentId, chunkIndex],
+  );
+}

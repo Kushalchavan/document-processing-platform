@@ -68,6 +68,6 @@ runMigrations()
     process.exit(0);
   })
   .catch((error) => {
-    logger.error('❌ Migration failed', error);
+    console.error('❌ Migration failed', error);
     process.exit(1);
   });

@@ -6,7 +6,7 @@ import {
   updateExtractedText,
 } from '@modules/documents/document.repository';
 import { extractTextFromPdf } from '@shared/utils/pdf';
-import { createChunk } from '@modules/documents/chunk.repository';
+import { createChunk, updateEmbedding } from '@modules/documents/chunk.repository';
 import { chunkText } from '@shared/utils/chunk';
 import { generateEmbedding } from '@infrastructure/ai/embedding';
 import { logger } from '@infrastructure/logger/logger';
@@ -43,13 +43,26 @@ export const documentWorker = new Worker(
         logger.info(`Processing chunk ${index}`);
         await createChunk(documentId, index, chunk);
         const embedding = await generateEmbedding(chunk);
-        logger.info(`Embedding length: ${embedding.length}`);
+        await updateEmbedding(documentId, index, embedding);
+
+        logger.info(
+          {
+            chunkIndex: index,
+            dimensions: embedding.length,
+          },
+          'Embedding stored',
+        );
       }
 
       await updateDocumentStatus(documentId, 'completed');
       logger.info('Worker finished');
     } catch (error: any) {
-      logger.error('Worker crashed:', error);
+      logger.error(
+        {
+          err: error,
+        },
+        'Worker crashed',
+      );
       throw error;
     }
   },

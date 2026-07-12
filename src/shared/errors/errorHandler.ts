@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { AppError } from './AppError';
 import { MulterError } from 'multer';
+import { logger } from '@infrastructure/logger/logger';
 
 export function errorHandler(error: unknown, _req: Request, res: Response, _next: NextFunction) {
   if (error instanceof AppError) {
@@ -28,7 +29,7 @@ export function errorHandler(error: unknown, _req: Request, res: Response, _next
     });
   }
 
-  console.error(error);
+  logger.error(error);
 
   return res.status(500).json({
     error: {

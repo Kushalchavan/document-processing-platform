@@ -2,6 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { dbPool } from './pool';
+import { logger } from '@infrastructure/logger/logger';
 
 // import.meta.url
 // file:src/infrastructure/database/migrate.ts
@@ -63,11 +64,10 @@ export async function runMigrations() {
 
 runMigrations()
   .then(() => {
-    console.log('✅ Migrations completed');
+    logger.info('✅ Migrations completed');
     process.exit(0);
   })
   .catch((error) => {
-    console.error('❌ Migration failed');
-    console.error(error);
+    logger.error('❌ Migration failed', error);
     process.exit(1);
   });

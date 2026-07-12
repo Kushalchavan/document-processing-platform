@@ -1,3 +1,4 @@
+import { logger } from '@infrastructure/logger/logger';
 import { dbPool } from './pool';
 
 export async function initializeDatabase() {
@@ -5,9 +6,9 @@ export async function initializeDatabase() {
   try {
     connection = await dbPool.connect();
     await connection.query(`SELECT 1`); // Test the connection
-    console.log('✅ Database connection established successfully.');
+    logger.info('✅ Database connection established successfully.');
   } catch (error: unknown) {
-    console.error('Error initializing the database:', error);
+    logger.error('Error initializing the database:', error);
     process.exit(1); // Exit the process with an error code
   } finally {
     connection?.release(); // Release the connnection back to the pool

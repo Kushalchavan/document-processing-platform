@@ -9,6 +9,7 @@ const requiredEnv = [
   'JWT_ACCESS_SECRET',
   'JWT_REFRESH_SECRET',
   'REDIS_URL',
+  'GEMINI_API_KEY',
 ];
 
 requiredEnv.forEach((name) => {
@@ -24,4 +25,5 @@ export const env = {
   jwtAccessSecret: process.env.JWT_ACCESS_SECRET!,
   jwtRefreshSecret: process.env.JWT_REFRESH_SECRET!,
   redisUrl: process.env.REDIS_URL!,
+  geminiApiKey: process.env.GEMINI_API_KEY!,
 };

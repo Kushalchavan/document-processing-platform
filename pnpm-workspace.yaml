@@ -1,4 +1,6 @@
 allowBuilds:
+  '@google/genai': true
   bcrypt: true
   esbuild: false
   msgpackr-extract: true
+  protobufjs: true

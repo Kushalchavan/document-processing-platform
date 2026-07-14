@@ -10,12 +10,13 @@
     "start": "node dist/server.js",
     "lint": "pnpm exec eslint .",
     "format": "pnpm exec prettier --write .",
-    "migrate": "pnpm exec tsx src/infrastructure/database/migrate.ts"
+    "migrate": "pnpm exec tsx src/infrastructure/database/migrate.ts",
+    "worker": "node dist/infrastructure/workers/document.worker.js"
   },
   "dependencies": {
     "@google/genai": "^2.11.0",
     "bcrypt": "^6.0.0",
-    "bullmq": "^5.79.3",
+    "bullmq": "5.79.3",
     "compression": "^1.8.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
@@ -23,7 +24,7 @@
     "express": "^5.2.1",
     "express-async-errors": "^3.1.1",
     "helmet": "^8.2.0",
-    "ioredis": "^5.10.1",
+    "ioredis": "5.10.1",
     "jsonwebtoken": "^9.0.3",
     "multer": "^2.2.0",
     "pdfjs-dist": "^6.1.200",

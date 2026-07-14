@@ -8,7 +8,7 @@ export async function initializeDatabase() {
     await connection.query(`SELECT 1`); // Test the connection
     logger.info('✅ Database connection established successfully.');
   } catch (error: unknown) {
-    logger.error('Error initializing the database:', error);
+    logger.error({err: error}, 'Error initializing the database');
     process.exit(1); // Exit the process with an error code
   } finally {
     connection?.release(); // Release the connnection back to the pool

@@ -4,10 +4,10 @@ import {
   logoutController,
   registerController,
   refreshController,
-} from './auth.controller';
-import { registerSchema, loginSchema, refreshSchema } from './auth.schema';
-import { validate } from '@shared/middleware/validate.middleware';
-import { authenticate } from '@shared/middleware/auth.middleware';
+} from './auth.controller.js';
+import { registerSchema, loginSchema, refreshSchema } from './auth.schema.js';
+import { validate } from '../../shared/middleware/validate.middleware.js';
+import { authenticate } from '../../shared/middleware/auth.middleware.js';
 
 const router = Router();
 

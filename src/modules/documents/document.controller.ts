@@ -1,6 +1,11 @@
 import { Request, Response } from 'express';
-import { uploadDocument, getDocuments, getDocumentById, deleteDocuments } from './document.service';
-import { getDocumentsSchema, documentParamsSchema } from './document.schema';
+import {
+  uploadDocument,
+  getDocuments,
+  getDocumentById,
+  deleteDocuments,
+} from './document.service.js';
+import { getDocumentsSchema, documentParamsSchema } from './document.schema.js';
 
 export async function uploadDocumentController(req: Request, res: Response) {
   if (!req.file) {

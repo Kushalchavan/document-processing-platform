@@ -1,12 +1,12 @@
 import { Router } from 'express';
-import { authenticate } from '@shared/middleware/auth.middleware';
-import { upload } from '@config/multer';
+import { authenticate } from '../../shared/middleware/auth.middleware.js';
+import { upload } from '../../config/multer.js';
 import {
   uploadDocumentController,
   getDocumentsController,
   getDocumentByIdController,
   deleteDocumentController,
-} from './document.controller';
+} from './document.controller.js';
 
 const router = Router();
 

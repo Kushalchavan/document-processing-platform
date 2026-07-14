@@ -1,15 +1,15 @@
 import { Worker } from 'bullmq';
-import { redis } from '@infrastructure/queue/redis';
+import { redis } from '../../infrastructure/queue/redis.js';
 import {
   findDocumentByIdForWorker,
   updateDocumentStatus,
   updateExtractedText,
-} from '@modules/documents/document.repository';
-import { extractTextFromPdf } from '@shared/utils/pdf';
-import { createChunk, updateEmbedding } from '@modules/documents/chunk.repository';
-import { chunkText } from '@shared/utils/chunk';
-import { generateEmbedding } from '@infrastructure/ai/embedding';
-import { logger } from '@infrastructure/logger/logger';
+} from '../../modules/documents/document.repository.js';
+import { extractTextFromPdf } from '../../shared/utils/pdf.js';
+import { createChunk, updateEmbedding } from '../../modules/documents/chunk.repository.js';
+import { chunkText } from '../../shared/utils/chunk.js';
+import { generateEmbedding } from '../../infrastructure/ai/embedding.js';
+import { logger } from '../../infrastructure/logger/logger.js';
 
 export const documentWorker = new Worker(
   'document-processing',

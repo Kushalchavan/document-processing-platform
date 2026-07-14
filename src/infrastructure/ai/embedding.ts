@@ -1,4 +1,4 @@
-import { gemini } from './gemini';
+import { gemini } from './gemini.js';
 
 export async function generateEmbedding(text: string) {
   const response = await gemini.models.embedContent({

@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
-import { env } from '@config/env';
-import { JwtPayload } from '@modules/auth/auth.types';
+import { env } from '../../config/env.js';
+import { JwtPayload } from '../../modules/auth/auth.types.js';
 
 export function generateAccessToken(payload: JwtPayload) {
   return jwt.sign(payload, env.jwtAccessSecret, {

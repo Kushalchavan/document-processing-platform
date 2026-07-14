@@ -1,4 +1,4 @@
-import { dbPool } from '@infrastructure/database/pool';
+import { dbPool } from '../../infrastructure/database/pool.js';
 
 export async function createChunk(documentId: number, chunkIndex: number, content: string) {
   await dbPool.query(

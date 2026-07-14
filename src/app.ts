@@ -4,15 +4,15 @@ import helmet from 'helmet';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import { json, urlencoded } from 'express';
-import { requestIdMiddleware } from '@shared/middleware/requestId.middleware';
-import { errorHandler } from '@shared/errors/errorHandler';
-import { healthRouter } from '@shared/routes/health.routes';
-import { httpLogger } from '@infrastructure/logger/httpLogger';
+import { requestIdMiddleware } from './shared/middleware/requestId.middleware.js';
+import { errorHandler } from './shared/errors/errorHandler.js';
+import { healthRouter } from './shared/routes/health.routes.js';
+import { httpLogger } from './infrastructure/logger/httpLogger.js';
 
 // Module route imports
-import authRouter from '@modules/auth/auth.routes';
-import documentRouter from '@modules/documents/document.routes';
-import chatRoutes from '@modules/chat/chat.routes';
+import authRouter from './modules/auth/auth.routes.js';
+import documentRouter from './modules/documents/document.routes.js';
+import chatRoutes from './modules/chat/chat.routes.js';
 
 const app = express();
 

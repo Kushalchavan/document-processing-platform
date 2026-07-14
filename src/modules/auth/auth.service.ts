@@ -1,4 +1,4 @@
-import { ConflictError } from '@shared/errors/ConflictError';
+import { ConflictError } from '../../shared/errors/ConflictError.js';
 import {
   createRefreshToken,
   createUser,
@@ -6,11 +6,15 @@ import {
   revokeRefreshToken,
   findRefreshTokenByUserId,
   updateRefreshToken,
-} from './auth.repository';
-import { LoginInput, RegisterInput, RefreshInput } from './auth.schema';
+} from './auth.repository.js';
+import { LoginInput, RegisterInput, RefreshInput } from './auth.schema.js';
 import bcrypt from 'bcrypt';
-import { UnauthorizedError } from '@shared/errors/UnauthorizedError';
-import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from '@shared/utils/jwt';
+import { UnauthorizedError } from '../../shared/errors/UnauthorizedError.js';
+import {
+  generateAccessToken,
+  generateRefreshToken,
+  verifyRefreshToken,
+} from '../../shared/utils/jwt.js';
 
 export async function register({ username, email, password }: RegisterInput) {
   const existingUser = await findByEmail(email);

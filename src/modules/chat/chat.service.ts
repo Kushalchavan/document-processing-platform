@@ -1,7 +1,7 @@
-import { NotFoundError } from '@shared/errors/NotFoundError';
-import { getExtractedText } from './chat.repository';
-import { askGemini } from '@infrastructure/ai/chat';
-import { AskQuestionInput } from './chat.types';
+import { NotFoundError } from '../../shared/errors/NotFoundError.js';
+import { getExtractedText } from './chat.repository.js';
+import { askGemini } from '../../infrastructure/ai/chat.js';
+import { AskQuestionInput } from './chat.types.js';
 
 export async function askQuestion({ documentId, question }: AskQuestionInput) {
   const document = await getExtractedText(documentId);

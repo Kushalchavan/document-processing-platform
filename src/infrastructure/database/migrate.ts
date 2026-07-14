@@ -1,8 +1,8 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { dbPool } from './pool';
-import { logger } from '@infrastructure/logger/logger';
+import { dbPool } from './pool.js';
+import { logger } from '../../infrastructure/logger/logger.js';
 
 // import.meta.url
 // file:src/infrastructure/database/migrate.ts

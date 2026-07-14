@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { login, logout, refresh, register } from './auth.service';
-import { env } from '@config/env';
+import { login, logout, refresh, register } from './auth.service.js';
+import { env } from '../../config/env.js';
 
 export async function registerController(req: Request, res: Response) {
   const { username, email, password } = req.body;

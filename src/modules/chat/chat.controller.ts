@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { askQuestionSchema } from './chat.schema';
-import { askQuestion } from './chat.service';
+import { askQuestionSchema } from './chat.schema.js';
+import { askQuestion } from './chat.service.js';
 
 export async function askQuestionController(req: Request, res: Response) {
   const body = askQuestionSchema.parse(req.body);

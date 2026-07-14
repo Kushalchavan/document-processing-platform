@@ -1,5 +1,5 @@
-import { dbPool } from '@infrastructure/database/pool';
-import { CreateDocumentInput, GetDocumentsInput } from './document.types';
+import { dbPool } from '../../infrastructure/database/pool.js';
+import { CreateDocumentInput, GetDocumentsInput } from './document.types.js';
 
 // create a new document for a specific user
 export async function createDocument({

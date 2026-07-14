@@ -1,7 +1,7 @@
 import multer from 'multer';
 import path from 'node:path';
 import fs from 'node:fs';
-import { ValidationError } from '@shared/errors/ValidationError';
+import { ValidationError } from '../shared/errors/ValidationError.js';
 
 const allowedMimeTypes = [
   'application/pdf',

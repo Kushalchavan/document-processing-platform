@@ -4,10 +4,10 @@ import {
   getDocument,
   findDocumentById,
   deleteDocument,
-} from './document.repository';
-import { UploadDocumentInput } from './document.types';
-import { NotFoundError } from '@shared/errors/NotFoundError';
-import { documentQueue } from '@infrastructure/queue/document.queue';
+} from './document.repository.js';
+import { UploadDocumentInput } from './document.types.js';
+import { NotFoundError } from '../../shared/errors/NotFoundError.js';
+import { documentQueue } from '../../infrastructure/queue/document.queue.js';
 
 export async function uploadDocument({ userId, file }: UploadDocumentInput) {
   const document = await createDocument({

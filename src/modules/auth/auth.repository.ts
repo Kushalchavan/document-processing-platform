@@ -1,5 +1,5 @@
-import { dbPool } from '@infrastructure/database/pool';
-import { CreateUserInput } from './auth.types';
+import { dbPool } from '../../infrastructure/database/pool.js';
+import { CreateUserInput } from './auth.types.js';
 
 export async function findByEmail(email: string) {
   const result = await dbPool.query(

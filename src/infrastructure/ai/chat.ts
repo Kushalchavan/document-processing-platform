@@ -1,4 +1,4 @@
-import { gemini } from './gemini';
+import { gemini } from './gemini.js';
 
 export async function askGemini(context: string, question: string) {
   const response = await gemini.models.generateContent({

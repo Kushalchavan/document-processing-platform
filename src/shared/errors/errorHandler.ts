@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
-import { AppError } from './AppError';
+import { AppError } from './AppError.js';
 import { MulterError } from 'multer';
-import { logger } from '@infrastructure/logger/logger';
+import { logger } from '../../infrastructure/logger/logger.js';
 
 export function errorHandler(error: unknown, _req: Request, res: Response, _next: NextFunction) {
   if (error instanceof AppError) {

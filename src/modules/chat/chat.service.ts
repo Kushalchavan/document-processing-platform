@@ -1,20 +1,30 @@
-import { NotFoundError } from '../../shared/errors/NotFoundError.js';
-import { getExtractedText } from './chat.repository.js';
+import { generateEmbedding } from '../../infrastructure/ai/embedding.js';
 import { askGemini } from '../../infrastructure/ai/chat.js';
+import { NotFoundError } from '../../shared/errors/NotFoundError.js';
+import { searchRelevantChunks } from './chat.repository.js';
 import { AskQuestionInput } from './chat.types.js';
 
-export async function askQuestion({ documentId, question }: AskQuestionInput) {
-  const document = await getExtractedText(documentId);
+export async function askQuestion({
+  documentId,
+  question,
+}: AskQuestionInput) {
+  // Generate embedding for the user's question
+  const embedding = await generateEmbedding(question);
 
-  if (!document) {
-    throw new NotFoundError('Document not found');
+  // Search the most relevant chunks
+  const chunks = await searchRelevantChunks(documentId, embedding);
+
+  if (chunks.length === 0) {
+    throw new NotFoundError('No relevant content found');
   }
 
-  if (!document.extracted_text) {
-    throw new Error('Document has not been processed yet');
-  }
+  // Build the context
+  const context = chunks
+    .map((chunk) => chunk.content)
+    .join('\n\n');
 
-  const answer = await askGemini(document.extracted_text, question);
+  // Asking Gemini using only the relevant context
+  const answer = await askGemini(context, question);
 
   return {
     answer,

@@ -4,7 +4,6 @@ import globals from 'globals';
 
 export default [
   js.configs.recommended,
-
   ...tseslint.configs.recommended,
 
   {
@@ -19,7 +18,7 @@ export default [
         ...globals.node,
       },
     },
-
+    
     rules: {
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-unused-vars': [

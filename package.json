@@ -12,9 +12,9 @@
     "format": "pnpm exec prettier --write .",
     "migrate": "pnpm exec tsx src/infrastructure/database/migrate.ts",
     "worker": "node dist/infrastructure/workers/document.worker.js",
-    "test": "vitest",
-    "test:watch": "vitest --watch",
-    "test:coverage": "vitest run --coverage",
+    "test": "cross-env NODE_ENV=test vitest",
+    "test:watch": "cross-env NODE_ENV=test vitest --watch",
+    "test:coverage": "cross-env NODE_ENV=test vitest run --coverage",
     "test:ui": "vitest --ui"
   },
   "dependencies": {
@@ -53,6 +53,7 @@
     "@typescript-eslint/eslint-plugin": "^8.62.1",
     "@typescript-eslint/parser": "^8.62.1",
     "@vitest/coverage-v8": "^4.1.10",
+    "cross-env": "^10.1.0",
     "eslint": "^10.6.0",
     "eslint-config-prettier": "^10.1.8",
     "globals": "^17.7.0",

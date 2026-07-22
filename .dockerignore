@@ -3,6 +3,8 @@ dist
 .git
 .gitignore
 .env
-.env.local
+.env*
+.env.test
+.env.production
 uploads
 .env.docker

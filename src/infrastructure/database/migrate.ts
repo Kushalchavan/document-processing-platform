@@ -37,21 +37,6 @@ async function ensureMigrationsTableExists() {
 }
 
 export async function runMigrations() {
-
-  
-   console.log('DATABASE_URL:', process.env.DATABASE_URL);
-
-  const info = await dbPool.query(`
-    SELECT
-      current_database() AS database,
-      inet_server_addr() AS server_ip,
-      inet_server_port() AS server_port,
-      version();
-  `);
-
-  console.log(info.rows[0]);
-
-
   await ensureMigrationsTableExists();
 
   const files = (await fs.readdir(migrationsPath))

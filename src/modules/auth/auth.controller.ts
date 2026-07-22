@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { login, logout, refresh, register } from './auth.service.js';
 import { env } from '../../config/env.js';
+import { UnauthorizedError } from '../../shared/errors/UnauthorizedError.js';
 
 export async function registerController(req: Request, res: Response) {
   const { username, email, password } = req.body;
@@ -39,12 +40,16 @@ export async function logoutController(req: Request, res: Response) {
 export async function refreshController(req: Request, res: Response) {
   const refreshToken = req.cookies.refreshToken;
 
+  if (!refreshToken) {
+    throw new UnauthorizedError("Refresh token is required");
+  }
+
   const result = await refresh({ refreshToken });
 
-  res.cookie('refreshToken', result.refreshToken, {
+  res.cookie("refreshToken", result.refreshToken, {
     httpOnly: true,
-    secure: env.nodeEnv === 'production',
-    sameSite: 'strict',
+    secure: env.nodeEnv === "production",
+    sameSite: "strict",
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 

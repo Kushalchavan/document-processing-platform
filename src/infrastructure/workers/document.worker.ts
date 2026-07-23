@@ -5,64 +5,46 @@ import {
   updateDocumentStatus,
   updateExtractedText,
 } from '../../modules/documents/document.repository.js';
-import { extractTextFromPdf } from '../../shared/utils/pdf.js';
 import { createChunk, updateEmbedding } from '../../modules/documents/chunk.repository.js';
+import { extractTextFromPdf } from '../../shared/utils/pdf.js';
 import { chunkText } from '../../shared/utils/chunk.js';
 import { generateEmbedding } from '../../infrastructure/ai/embedding.js';
 import { logger } from '../../infrastructure/logger/logger.js';
+
+export async function processDocument(documentId: number) {
+  logger.info('Received job');
+
+  await updateDocumentStatus(documentId, 'processing');
+
+  const document = await findDocumentByIdForWorker(documentId);
+  if (!document) {
+    throw new Error('Document not found');
+  }
+
+  const text = await extractTextFromPdf(document.file_path);
+
+  await updateExtractedText(documentId, text);
+
+  const chunks = chunkText(text);
+
+  for (const [index, chunk] of chunks.entries()) {
+    await createChunk(documentId, index, chunk);
+
+    const embedding = await generateEmbedding(chunk);
+
+    await updateEmbedding(documentId, index, embedding);
+  }
+
+  await updateDocumentStatus(documentId, 'completed');
+}
 
 export const documentWorker = new Worker(
   'document-processing',
   async (job) => {
     try {
-      logger.info('Received job:', job.data);
-
-      const { documentId } = job.data;
-      logger.info('Updating status...');
-      await updateDocumentStatus(documentId, 'processing');
-
-      logger.info('Finding document...');
-      const document = await findDocumentByIdForWorker(documentId);
-
-      if (!document) {
-        throw new Error('Document not found');
-      }
-
-      logger.info('Extracting PDF...');
-      const text = await extractTextFromPdf(document.file_path);
-
-      logger.info('Updating extracted text...');
-      await updateExtractedText(documentId, text);
-
-      logger.info('Chunking...');
-      const chunks = chunkText(text);
-
-      logger.info(`Chunks: ${chunks.length}`);
-
-      for (const [index, chunk] of chunks.entries()) {
-        logger.info(`Processing chunk ${index}`);
-        await createChunk(documentId, index, chunk);
-        const embedding = await generateEmbedding(chunk);
-        await updateEmbedding(documentId, index, embedding);
-
-        logger.info(
-          {
-            chunkIndex: index,
-            dimensions: embedding.length,
-          },
-          'Embedding stored',
-        );
-      }
-
-      await updateDocumentStatus(documentId, 'completed');
-      logger.info('Worker finished');
-    } catch (error: any) {
-      logger.error(
-        {
-          err: error,
-        },
-        'Worker crashed',
-      );
+      await processDocument(job.data.documentId);
+    } catch (error) {
+      logger.error({ err: error }, 'Worker crashed');
       throw error;
     }
   },

@@ -1,10 +1,6 @@
 import { dbPool } from '../../infrastructure/database/pool.js';
 
-export async function searchRelevantChunks(
-  documentId: number,
-  embedding: number[],
-  limit = 5,
-) {
+export async function searchRelevantChunks(documentId: number, embedding: number[], limit = 5) {
   const result = await dbPool.query(
     `
     SELECT

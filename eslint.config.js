@@ -18,7 +18,7 @@ export default [
         ...globals.node,
       },
     },
-    
+
     rules: {
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-unused-vars': [

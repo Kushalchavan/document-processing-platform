@@ -10,6 +10,6 @@ export default defineConfig({
       reporter: ['text', 'html'],
       reportsDirectory: './coverage',
     },
-    setupFiles: ['tests/setup.ts']
+    setupFiles: ['tests/setup.ts'],
   },
 });

@@ -10,11 +10,6 @@ describe('chunkText', () => {
     const chunks = chunkText(text, 3);
 
     // Assert
-    expect(chunks).toEqual([
-      'abc',
-      'def',
-      'ghi',
-      'j',
-    ]);
+    expect(chunks).toEqual(['abc', 'def', 'ghi', 'j']);
   });
 });

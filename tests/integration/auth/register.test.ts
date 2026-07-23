@@ -32,37 +32,30 @@ describe('POST /api/v1/auth/register', () => {
     expect(user.password_hash).not.toBe('password123');
   });
 
+  it('should return 409 when email already exists', async () => {
+    const timestamp = Date.now();
 
-it("should return 409 when email already exists", async () => {
-  const timestamp = Date.now();
+    const email = `user-${timestamp}@example.com`;
+    const password = 'password123';
 
-  const email = `user-${timestamp}@example.com`;
-  const password = "password123";
+    const username1 = `kushal-${timestamp}-1`;
+    const username2 = `kushal-${timestamp}-2`;
 
-  const username1 = `kushal-${timestamp}-1`;
-  const username2 = `kushal-${timestamp}-2`;
-
-  // First registration
-  await request(app)
-    .post("/api/v1/auth/register")
-    .send({
+    // First registration
+    await request(app).post('/api/v1/auth/register').send({
       username: username1,
       email,
       password,
     });
 
-  // Duplicate registration
-  const response = await request(app)
-    .post("/api/v1/auth/register")
-    .send({
+    // Duplicate registration
+    const response = await request(app).post('/api/v1/auth/register').send({
       username: username2,
       email, // same email
       password,
     });
 
-  expect(response.status).toBe(409);
-  expect(response.body.error.message).toBe(
-    "User with this email already exists"
-  );
-});
+    expect(response.status).toBe(409);
+    expect(response.body.error.message).toBe('User with this email already exists');
+  });
 });

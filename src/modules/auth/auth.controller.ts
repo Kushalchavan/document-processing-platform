@@ -41,15 +41,15 @@ export async function refreshController(req: Request, res: Response) {
   const refreshToken = req.cookies.refreshToken;
 
   if (!refreshToken) {
-    throw new UnauthorizedError("Refresh token is required");
+    throw new UnauthorizedError('Refresh token is required');
   }
 
   const result = await refresh({ refreshToken });
 
-  res.cookie("refreshToken", result.refreshToken, {
+  res.cookie('refreshToken', result.refreshToken, {
     httpOnly: true,
-    secure: env.nodeEnv === "production",
-    sameSite: "strict",
+    secure: env.nodeEnv === 'production',
+    sameSite: 'strict',
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 

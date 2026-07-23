@@ -1,31 +1,26 @@
-import request from "supertest";
-import { describe, it, expect } from "vitest";
-import app from "../../../src/app.js";
+import request from 'supertest';
+import { describe, it, expect } from 'vitest';
+import app from '../../../src/app.js';
 
-describe("POST /api/v1/auth/login", () => {
-  it("should login successfully", async () => {
+describe('POST /api/v1/auth/login', () => {
+  it('should login successfully', async () => {
     const timestamp = Date.now();
-
     const email = `user-${timestamp}@example.com`;
     const username = `kushal-${timestamp}`;
-    const password = "password123";
+    const password = 'password123';
 
     // Register user
-    await request(app)
-      .post("/api/v1/auth/register")
-      .send({
-        username,
-        email,
-        password,
-      });
+    await request(app).post('/api/v1/auth/register').send({
+      username,
+      email,
+      password,
+    });
 
     // Login
-    const response = await request(app)
-      .post("/api/v1/auth/login")
-      .send({
-        email,
-        password,
-      });
+    const response = await request(app).post('/api/v1/auth/login').send({
+      email,
+      password,
+    });
 
     expect(response.status).toBe(200);
 
@@ -34,51 +29,40 @@ describe("POST /api/v1/auth/login", () => {
     expect(response.body.user.username).toBe(username);
 
     expect(response.body.accessToken).toBeDefined();
-    expect(response.headers["set-cookie"]).toBeDefined();
-expect(response.headers["set-cookie"][0]).toContain("refreshToken=");
-expect(response.headers["set-cookie"][0]).toContain("HttpOnly");
+    expect(response.headers['set-cookie']).toBeDefined();
+    expect(response.headers['set-cookie'][0]).toContain('refreshToken=');
+    expect(response.headers['set-cookie'][0]).toContain('HttpOnly');
   });
 
-  it("should return 401 for invalid password", async () => {
-  const timestamp = Date.now();
+  it('should return 401 for invalid password', async () => {
+    const timestamp = Date.now();
+    const email = `user-${timestamp}@example.com`;
+    const username = `kushal-${timestamp}`;
+    const password = 'password123';
 
-  const email = `user-${timestamp}@example.com`;
-  const username = `kushal-${timestamp}`;
-  const password = "password123";
-
-  await request(app)
-    .post("/api/v1/auth/register")
-    .send({
+    await request(app).post('/api/v1/auth/register').send({
       username,
       email,
       password,
     });
 
-  const response = await request(app)
-    .post("/api/v1/auth/login")
-    .send({
+    const response = await request(app).post('/api/v1/auth/login').send({
       email,
-      password: "wrongpassword",
+      password: 'wrongpassword',
     });
 
-  expect(response.status).toBe(401);
+    expect(response.status).toBe(401);
 
-  expect(response.body.error.message).toBe(
-    "Invalid email or password"
-  );
-});
+    expect(response.body.error.message).toBe('Invalid email or password');
+  });
 
-it("should return 401 when email does not exist", async () => {
-  const response = await request(app)
-    .post("/api/v1/auth/login")
-    .send({
-      email: "unknown@example.com",
-      password: "password123",
+  it('should return 401 when email does not exist', async () => {
+    const response = await request(app).post('/api/v1/auth/login').send({
+      email: 'unknown@example.com',
+      password: 'password123',
     });
 
-  expect(response.status).toBe(401);
-  expect(response.body.error.message).toBe(
-    "Invalid email or password"
-  );
-});
+    expect(response.status).toBe(401);
+    expect(response.body.error.message).toBe('Invalid email or password');
+  });
 });

@@ -4,10 +4,7 @@ import { NotFoundError } from '../../shared/errors/NotFoundError.js';
 import { searchRelevantChunks } from './chat.repository.js';
 import { AskQuestionInput } from './chat.types.js';
 
-export async function askQuestion({
-  documentId,
-  question,
-}: AskQuestionInput) {
+export async function askQuestion({ documentId, question }: AskQuestionInput) {
   // Generate embedding for the user's question
   const embedding = await generateEmbedding(question);
 
@@ -19,9 +16,7 @@ export async function askQuestion({
   }
 
   // Build the context
-  const context = chunks
-    .map((chunk) => chunk.content)
-    .join('\n\n');
+  const context = chunks.map((chunk) => chunk.content).join('\n\n');
 
   // Asking Gemini using only the relevant context
   const answer = await askGemini(context, question);
